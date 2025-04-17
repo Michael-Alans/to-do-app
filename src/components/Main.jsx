@@ -20,15 +20,15 @@ export default function Main() {
       document.getElementById('theme-toggler').innerHTML = darkMode ? `<img src="/assets/images/icon-sun.svg" />` : `<img src="/assets/images/icon-moon.svg" alt="" />`
     },[darkMode])
 
-    const [checkTask, setCheckTask] = React.useState(false)
+    
+    const [checked, setChecked] = React.useState([]);
 
-    function toggleCheckTask() {
-        setCheckTask(prevValue => !prevValue)
+    function toggleCheck(index) {
+    setChecked((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index)  : [...prev, index]
+      
+    );
     }
-    
-    
-    
-
 
     React.useEffect(() => {
         document.querySelector('.background').style.background = darkMode
@@ -40,7 +40,25 @@ export default function Main() {
     const [task, setTask] = React.useState([]) 
 
     const allTasks = task.map((allTask, index) => 
-        <li key={index} className={darkMode ? 'dark' : 'light'}  ><div id="check" onClick={toggleCheckTask} ></div>{allTask} 
+        <li key={index} className={darkMode ? 'dark' : 'light'}  ><div id="check" onClick={()=> toggleCheck(index)} 
+         
+        style={{
+            width: "20px",
+            height: "20px",
+            bordeRadius: '50px',
+            display: "inline-block",
+            backgroundImage: checked.includes(index)
+              ? "url('/assets/images/icon-check.svg')"
+              : "none",
+            backgroundSize: "contain",
+            backgroundPosition: "center",
+            backgroundRepeat: 'no-repeat',
+            cursor: "pointer",
+            marginRight: "10px",
+            border: "1px solid #615d5d",
+          }}
+
+        ></div>{allTask} 
         <div id="clear" onClick={()=> {deleteTask(index)}} >&times;</div> </li>)
                                                                                                      
  
