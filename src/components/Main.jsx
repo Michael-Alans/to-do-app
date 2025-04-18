@@ -37,7 +37,14 @@ export default function Main() {
       }, [darkMode]);
       
 
-    const [task, setTask] = React.useState([]) 
+    const [task, setTask] =  React.useState(() => {
+      // Get tasks from localStorage when the app first loads
+      const savedTasks = localStorage.getItem("myTasks");
+      return savedTasks ? JSON.parse(savedTasks) : [];
+    }); 
+
+
+    
 
     const allTasks = task.map((allTask, index) => 
         <li key={index} className={darkMode ? 'dark' : 'light'}  ><div id="check" onClick={()=> toggleCheck(index)} 
@@ -45,7 +52,7 @@ export default function Main() {
         style={{
             width: "20px",
             height: "20px",
-            bordeRadius: '50px',
+            borderRadius: '50px',
             display: "inline-block",
             backgroundImage: checked.includes(index)
               ? "url('/assets/images/icon-check.svg')"
@@ -62,14 +69,21 @@ export default function Main() {
         <div id="clear" onClick={()=> {deleteTask(index)}} >&times;</div> </li>)
                                                                                                      
  
-    function handleSubmit(event) {
-        event.preventDefault()
-        const formElement = event.currentTarget
-        const formData = new FormData(formElement)
-        const newTask = formData.get('to-do')
+       function handleSubmit(event) {
+       event.preventDefault();
+       const formElement = event.currentTarget;
+       const formData = new FormData(formElement);
+       const newTask = formData.get('to-do');
 
-        newTask ? setTask(prevTask => ([...prevTask, newTask])):null
-    }
+      if (newTask) {
+        setTask(prevTask => {
+        const updatedTasks = [...prevTask, newTask];
+        localStorage.setItem("myTasks", JSON.stringify(updatedTasks));
+        return updatedTasks;
+      });
+  }
+}
+
 
     console.log(task)
 
@@ -78,6 +92,7 @@ export default function Main() {
       }
 
     
+      
 
 
     return(
